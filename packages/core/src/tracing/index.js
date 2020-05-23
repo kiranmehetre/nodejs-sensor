@@ -141,6 +141,20 @@ exports.getHandleForCurrentSpan = function getHandleForCurrentSpan() {
   return spanHandle.getHandleForCurrentSpan(cls);
 };
 
+exports.getAsyncContext = function getAsyncContext() {
+  if (!cls) {
+    return null;
+  }
+  return cls.getAsyncContext();
+};
+
+exports.restoreAsyncContext = function restoreAsyncContext(context) {
+  if (!cls) {
+    return;
+  }
+  cls.restoreAsyncContext(context);
+};
+
 exports.getCls = function getCls() {
   // This only provides a value if tracing is enabled, otherwise cls will not be required and is null.
   return cls;
