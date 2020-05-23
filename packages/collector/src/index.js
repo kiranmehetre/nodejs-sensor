@@ -43,12 +43,22 @@ exports.currentSpan = function getHandleForCurrentSpan() {
   return instanaNodeJsCore.tracing.getHandleForCurrentSpan();
 };
 
+exports.asyncContext = function asyncContext() {
+  return instanaNodeJsCore.tracing.getAsyncContext();
+};
+
+exports.restoreAsyncContext = function restoreAsyncContext(context) {
+  instanaNodeJsCore.tracing.restoreAsyncContext(context);
+};
+
 exports.sdk = instanaNodeJsCore.tracing.sdk;
 
 exports.setLogger = function(logger) {
   config.logger = logger;
   log.init(config, true);
 };
+
+exports.core = instanaNodeJsCore;
 
 if (process.env.INSTANA_IMMEDIATE_INIT != null && process.env.INSTANA_IMMEDIATE_INIT.toLowerCase() === 'true') {
   module.exports();

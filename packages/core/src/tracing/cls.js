@@ -96,6 +96,24 @@ exports.startSpan = function startSpan(spanName, kind, traceId, parentSpanId, w3
   return span;
 };
 
+exports.getAsyncContext = function getAsyncContext() {
+  if (!exports.ns) {
+    return null;
+  }
+  return exports.ns.active;
+};
+
+exports.restoreAsyncContext = function restoreAsyncContext(context) {
+  if (!exports.ns) {
+    return;
+  }
+  if (context == null) {
+    logger.warn('Ignoring restoreAsyncContext call because passed context was null or undefined.');
+    return;
+  }
+  exports.ns.enter(context);
+};
+
 /*
  * Get the currently active entry span.
  */
