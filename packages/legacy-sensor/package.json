@@ -25,7 +25,7 @@
   },
   "scripts": {
     "audit": "bin/prepare-audit.sh && npm audit --production; AUDIT_RESULT=$?; git checkout package-lock.json; exit $AUDIT_RESULT",
-    "test": "true",
+    "test": "npm run test:mocha",
     "test:mocha": "mocha --reporter spec $(find test -name '*test.js')",
     "test:debug": "WITH_STDOUT=true npm run test:mocha",
     "lint": "eslint src test",
