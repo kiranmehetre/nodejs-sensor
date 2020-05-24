@@ -30,9 +30,11 @@ exports.updateConfig = function(config) {
 
 function shimEmit(realEmit) {
   return function(type, req, res) {
+    process._rawDebug('httpServer#emit', type, isActive);
     if (type !== 'request' || !isActive) {
       return realEmit.apply(this, arguments);
     }
+    process._rawDebug('httpServer#request', req.method, req.url);
 
     var originalThis = this;
     var originalArgs = arguments;
@@ -65,9 +67,14 @@ function shimEmit(realEmit) {
       if (cls.tracingSuppressed()) {
         // We still need to forward X-INSTANA-L and the W3C trace context; this happens in exit instrumentations
         // (like httpClient.js).
+        process._rawDebug('httpServer#suppressed', req.method, req.url);
+        if (req.method === 'POST' && req.url === '/trigger') {
+          process._rawDebug(cls.ns);
+        }
         return realEmit.apply(originalThis, originalArgs);
       }
 
+      process._rawDebug('httpServer#starting span', req.method, req.url);
       var span = cls.startSpan(exports.spanName, constants.ENTRY, headers.traceId, headers.parentId, w3cTraceContext);
 
       if (headers.correlationType && headers.correlationId) {
@@ -155,6 +162,7 @@ function shimEmit(realEmit) {
           );
           span.ec = res.statusCode >= 500 ? 1 : 0;
           span.d = Date.now() - span.ts;
+          process._rawDebug('httpServer#finish/transmit', req.method, req.url);
           span.transmit();
         }
       }
@@ -165,10 +173,12 @@ function shimEmit(realEmit) {
 }
 
 exports.activate = function() {
+  process._rawDebug('httpServer#activate');
   isActive = true;
 };
 
 exports.deactivate = function() {
+  process._rawDebug('httpServer#deactivate');
   isActive = false;
 };
 

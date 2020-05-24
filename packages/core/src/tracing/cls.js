@@ -182,6 +182,7 @@ exports.tracingLevel = function tracingLevel() {
  */
 exports.tracingSuppressed = function tracingSuppressed() {
   var tl = exports.tracingLevel();
+  process._rawDebug('cls#tracingSuppressed', tl);
   return typeof tl === 'string' && tl.indexOf('0') === 0;
 };
 

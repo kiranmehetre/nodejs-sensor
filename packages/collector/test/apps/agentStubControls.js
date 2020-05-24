@@ -138,9 +138,11 @@ exports.waitUntilAppIsCompletelyInitialized = function waitUntilAppIsCompletelyI
       for (let i = 0, len = data.runtime.length; i < len; i++) {
         const d = data.runtime[i];
         if (d.pid === pid) {
+          process._rawDebug('waitUntilAppIsCompletelyInitialized#done');
           return true;
         }
       }
+      process._rawDebug('waitUntilAppIsCompletelyInitialized#fail');
       throw new Error(`PID ${pid} never sent any data to the agent.`);
     });
   });
