@@ -21,7 +21,7 @@ app.on('request', (req, res) => {
     if (req.method === 'GET') {
       // This is just a simple way of testing that calling restoreAsyncContext without an actual context does not break
       // anything.
-      // instana.restoreAsyncContext(null);
+      instana.restoreAsyncContext(null);
       return res.end();
     } else {
       res.statusCode = 405;

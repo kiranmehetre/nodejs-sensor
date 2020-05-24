@@ -16,7 +16,6 @@ exports.registerTestHooks = opts => {
   opts = opts || {};
 
   beforeEach(() => {
-    console.log('agentStubControls#beforeEach');
     const env = Object.create(process.env);
     env.AGENT_PORT = agentPort;
     env.EXTRA_HEADERS = (opts.extraHeaders || []).join(',');
@@ -134,18 +133,14 @@ exports.getTracingMetrics = () =>
   });
 
 exports.waitUntilAppIsCompletelyInitialized = function waitUntilAppIsCompletelyInitialized(pid) {
-  console.log('waitUntilAppIsCompletelyInitialized');
   return testUtils.retry(() => {
-    console.log('waitUntilAppIsCompletelyInitialized#retry');
     return exports.getRetrievedData().then(data => {
       for (let i = 0, len = data.runtime.length; i < len; i++) {
         const d = data.runtime[i];
         if (d.pid === pid) {
-          console.log('waitUntilAppIsCompletelyInitialized#done', data);
           return true;
         }
       }
-      console.log('waitUntilAppIsCompletelyInitialized#fail');
       throw new Error(`PID ${pid} never sent any data to the agent.`);
     });
   });

@@ -32,7 +32,6 @@ const ProcessControls = (module.exports = function ProcessControls(opts = {}) {
   // optional agent controls which will result in a beforeEach call which ensures that the
   // collector is successfully connected to the agent.
   this.agentControls = opts.agentControls;
-  console.log('GOT AGENT CONTROLS', !!this.agentControls);
   this.env = _.assign(
     {},
     process.env,
@@ -70,7 +69,6 @@ ProcessControls.prototype.registerTestHooks = function registerTestHooks() {
     return this.waitUntilServerIsUp();
   });
 
-  console.log('THIS.AGENTCONTROLS', !!this.agentControls);
   if (this.agentControls) {
     beforeEach(() => this.agentControls.waitUntilAppIsCompletelyInitialized(this.getPid()));
   }

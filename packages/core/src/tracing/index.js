@@ -103,7 +103,6 @@ function initInstrumenations(_config) {
 }
 
 exports.activate = function() {
-  console.log('TRACING/INDEX#ACTIVATE');
   if (tracingEnabled) {
     spanBuffer.activate();
     opentracing.activate();

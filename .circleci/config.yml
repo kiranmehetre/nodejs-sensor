@@ -95,6 +95,7 @@ shared: &shared
     - run: '([[ $(node -v) =~ ^v14.*$ ]] && npm run audit) || [[ ! $(node -v) =~ ^v14.*$ ]]'
     # Run linting first, we don't want to wait ages for the test suite to finish only to end with the CI job with a
     # linting error.
+    - run: npm run lint
     - run: npm test
 
     - save_cache:

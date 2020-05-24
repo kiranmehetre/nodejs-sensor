@@ -11,7 +11,7 @@
   },
   "scripts": {
     "audit": "npm audit --production",
-    "test": "npm run test:mocha",
+    "test": "NODE_ENV=debug USE_OPENTRACING_DEBUG_IMPL=true npm run test:mocha",
     "test:mocha": "mocha --reporter spec $(find test -name '*test.js')",
     "test:debug": "WITH_STDOUT=true npm run test:mocha",
     "lint": "eslint src test",
