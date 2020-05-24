@@ -30,9 +30,11 @@ exports.updateConfig = function(config) {
 
 function shimEmit(realEmit) {
   return function(type, req, res) {
+    console.log('HTTP EMIT', type, isActive);
     if (type !== 'request' || !isActive) {
       return realEmit.apply(this, arguments);
     }
+    console.log('INCOMING REQUEST', req.method, req.url);
 
     var originalThis = this;
     var originalArgs = arguments;
@@ -165,6 +167,7 @@ function shimEmit(realEmit) {
 }
 
 exports.activate = function() {
+  console.log('TRACING/INSTR/HTTPSERVER#ACTIVATE');
   isActive = true;
 };
 

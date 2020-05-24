@@ -11,7 +11,7 @@ const ProcessControls = require('../../../test_util/ProcessControls');
 
 let agentControls;
 
-describe('tracing/restore context', function() {
+describe.only('tracing/restore context', function() {
   // The version of sharp we are using is not compatible with Node.js >= 12.x
   if (!supportedVersion(process.versions.node) || semver.gte(process.versions.node, '12.0.0')) {
     return;
