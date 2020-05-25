@@ -89,14 +89,16 @@ ProcessControls.prototype.kill = function kill() {
 };
 
 ProcessControls.prototype.waitUntilServerIsUp = function waitUntilServerIsUp() {
-  return testUtils.retry(() => {
-    return request({
-      method: 'GET',
-      url: this.baseUrl,
-      headers: {
-        'X-INSTANA-L': '0'
-      },
-      strictSSL: false
+  return testUtils.delay(100).then(() => {
+    return testUtils.retry(() => {
+      return request({
+        method: 'GET',
+        url: this.baseUrl,
+        headers: {
+          'X-INSTANA-L': '0'
+        },
+        strictSSL: false
+      });
     });
   });
 };

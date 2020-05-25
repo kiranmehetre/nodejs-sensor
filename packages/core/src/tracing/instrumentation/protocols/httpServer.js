@@ -51,6 +51,7 @@ function shimEmit(realEmit) {
       var w3cTraceContext = headers.w3cTraceContext;
 
       if (typeof headers.level === 'string' && headers.level.indexOf('0') === 0) {
+        process._rawDebug('INCOMING SUPPRESSION');
         cls.setTracingLevel('0');
         if (w3cTraceContext) {
           w3cTraceContext.disableSampling();
@@ -64,13 +65,11 @@ function shimEmit(realEmit) {
         cls.setW3cTraceContext(w3cTraceContext);
       }
 
+      process._rawDebug(JSON.stringify(cls.ns, null, 2));
       if (cls.tracingSuppressed()) {
         // We still need to forward X-INSTANA-L and the W3C trace context; this happens in exit instrumentations
         // (like httpClient.js).
         process._rawDebug('httpServer#suppressed', req.method, req.url);
-        if (req.method === 'POST' && req.url === '/trigger') {
-          process._rawDebug(cls.ns);
-        }
         return realEmit.apply(originalThis, originalArgs);
       }
 

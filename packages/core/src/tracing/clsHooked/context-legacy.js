@@ -56,6 +56,7 @@ Namespace.prototype.get = function get(key) {
 };
 
 Namespace.prototype.createContext = function createContext() {
+  process._rawDebug('createContext', currentUid);
   let context = Object.create(this.active ? this.active : Object.prototype);
   context._ns_name = this.name;
   context.id = currentUid;
@@ -64,6 +65,7 @@ Namespace.prototype.createContext = function createContext() {
 };
 
 Namespace.prototype.run = function run(fn) {
+  process._rawDebug('run');
   let context = this.createContext();
   this.enter(context);
   try {
@@ -75,6 +77,7 @@ Namespace.prototype.run = function run(fn) {
 };
 
 Namespace.prototype.runAndReturn = function runAndReturn(fn) {
+  process._rawDebug('runAndReturn');
   var value;
   this.run(function(context) {
     value = fn(context);
@@ -88,6 +91,7 @@ Namespace.prototype.runAndReturn = function runAndReturn(fn) {
  * @returns {*}
  */
 Namespace.prototype.runPromise = function runPromise(fn) {
+  process._rawDebug('runPromise');
   let context = this.createContext();
   this.enter(context);
 
@@ -108,10 +112,12 @@ Namespace.prototype.runPromise = function runPromise(fn) {
 };
 
 Namespace.prototype.runPromiseOrRunAndReturn = function runPromiseOrRunAndReturn(fn) {
+  process._rawDebug('runPromiseOrRunAndReturn');
   throw new Error('Namespace.prototype.runPromiseOrRunAndReturn is not supported in Node.js < 8.');
 };
 
 Namespace.prototype.bind = function bindFactory(fn, context) {
+  process._rawDebug('bind');
   if (!context) {
     if (!this.active) {
       context = this.createContext();
@@ -132,12 +138,16 @@ Namespace.prototype.bind = function bindFactory(fn, context) {
 };
 
 Namespace.prototype.enter = function enter(context) {
+  process._rawDebug('enter', context.id, new Error().stack);
+  // console.trace('enter', context.id);
   assert.ok(context, 'context must be provided for entering');
   this._set.push(this.active);
   this.active = context;
 };
 
 Namespace.prototype.exit = function exit(context) {
+  process._rawDebug('exit', context.id);
+  // console.trace('exit', context.id);
   assert.ok(context, 'context must be provided for exiting');
 
   // Fast path for most exits that are at the top of the stack
@@ -162,6 +172,7 @@ Namespace.prototype.exit = function exit(context) {
 };
 
 Namespace.prototype.bindEmitter = function bindEmitter(emitter) {
+  process._rawDebug('bindEmitter');
   assert.ok(emitter.on && emitter.addListener && emitter.emit, 'can only bind real EEs');
 
   let namespace = this;

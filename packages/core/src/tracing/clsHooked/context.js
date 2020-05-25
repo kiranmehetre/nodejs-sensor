@@ -67,6 +67,7 @@ Namespace.prototype.get = function get(key) {
  * Creates a new CLS context in this namespace.
  */
 Namespace.prototype.createContext = function createContext() {
+  process._rawDebug('createContext');
   // Prototype inherit existing context if created a new child context within existing context.
   let context = Object.create(this.active ? this.active : Object.prototype);
   context._ns_name = this.name;
@@ -81,6 +82,7 @@ Namespace.prototype.createContext = function createContext() {
  * use runAndReturn instead.
  */
 Namespace.prototype.run = function run(fn) {
+  process._rawDebug('run');
   let context = this.createContext();
   this.enter(context);
 
@@ -97,6 +99,7 @@ Namespace.prototype.run = function run(fn) {
  * terminates. Asynchronous work started in this function will happen in that new context.
  */
 Namespace.prototype.runAndReturn = function runAndReturn(fn) {
+  process._rawDebug('runAndReturn');
   let value;
   this.run(function(context) {
     value = fn(context);
@@ -114,6 +117,7 @@ Namespace.prototype.runAndReturn = function runAndReturn(fn) {
  * This function assumes that the returned promise is CLS-friendly or wrapped already.
  */
 Namespace.prototype.runPromise = function runPromise(fn) {
+  process._rawDebug('runPromise');
   let context = this.createContext();
   this.enter(context);
 
@@ -141,6 +145,7 @@ Namespace.prototype.runPromise = function runPromise(fn) {
  * This function assumes that the returned promise (if any) is CLS-friendly or wrapped already.
  */
 Namespace.prototype.runPromiseOrRunAndReturn = function runPromiseOrRunAndReturn(fn) {
+  process._rawDebug('runPromiseOrRunAndReturn');
   let isPromise = false;
   let valueOrPromise;
   const context = this.createContext();
@@ -176,6 +181,7 @@ Namespace.prototype.runPromiseOrRunAndReturn = function runPromiseOrRunAndReturn
  * and leave that context once the function terminates. If no context is active, a new context will be created.
  */
 Namespace.prototype.bind = function bind(fn, context) {
+  process._rawDebug('bind');
   if (!context) {
     if (!this.active) {
       context = this.createContext();
